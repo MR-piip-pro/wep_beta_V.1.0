@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الأدوات - PIIP Arsenal</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dark-theme">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">👁️‍🗨️</div>
+                <div class="logo-text">
+                    <h1>PIIP_PRO Arsenal</h1>
+                    <p class="tagline">Silent Tools for Loud Impact</p>
+                </div>
+            </div>
+            <div class="header-controls">
+                <a href="index.html" class="back-btn">← العودة</a>
+                <button id="theme-toggle" class="theme-toggle" title="تبديل الوضع">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search and Filter -->
+    <div class="tools-page-controls">
+        <div class="search-wrapper">
+            <input type="text" id="search-input" class="search-input" placeholder="ابحث في الأدوات...">
+        </div>
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">الكل</button>
+            <button class="filter-tab" data-filter="recon">Recon</button>
+            <button class="filter-tab" data-filter="exploitation">Exploitation</button>
+            <button class="filter-tab" data-filter="osint">OSINT</button>
+            <button class="filter-tab" data-filter="stealth">Stealth</button>
+            <button class="filter-tab" data-filter="reverse">Reverse</button>
+            <button class="filter-tab" data-filter="misc">Misc</button>
+        </div>
+    </div>
+
+    <!-- Tools Grid -->
+    <main class="main-grid">
+        <div class="tools-header">
+            <h2>جميع الأدوات</h2>
+            <div class="tools-stats">
+                <span id="tools-count">0</span> أداة
+            </div>
+        </div>
+        <div id="tools-container" class="tools-grid">
+            <!-- Tools will be loaded here dynamically -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>PIIP Arsenal</h3>
+                <p>مجموعة من الأدوات المتقدمة للمختبرين الرقميين</p>
+            </div>
+            <div class="footer-section">
+                <h4>روابط سريعة</h4>
+                <ul>
+                    <li><a href="https://github.com/your-repo" target="_blank">GitHub</a></li>
+                    <li><a href="privacy.html">سياسة الاستخدام</a></li>
+                    <li><a href="contact.html">اتصل بنا</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>الحالة</h4>
+                <div class="status-indicator">
+                    <span class="status-dot online"></span>
+                    <span>متصل</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 PIIP Arsenal. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script src="js/tools-data.js"></script>
+    <script src="js/tools-page.js"></script>
+</body>
+</html> 

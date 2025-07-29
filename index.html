@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👁️‍🗨️ PIIP_PRO Arsenal - Silent Tools for Loud Impact</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dark-theme">
+    <!-- Terminal Loading Effect -->
+    <div id="terminal-loader" class="terminal-loader">
+        <div class="terminal-content">
+            <div class="terminal-line">Initializing PIIP Arsenal...</div>
+            <div class="terminal-line">Loading tactical modules...</div>
+            <div class="terminal-line">Establishing secure connection...</div>
+            <div class="terminal-line">Arsenal ready for deployment.</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="main-content hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">👁️‍🗨️</div>
+                    <div class="logo-text">
+                        <h1>PIIP_PRO Arsenal</h1>
+                        <p class="tagline">Silent Tools for Loud Impact</p>
+                    </div>
+                </div>
+                <div class="header-controls">
+                    <button id="theme-toggle" class="theme-toggle" title="تبديل الوضع">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button id="search-toggle" class="search-toggle" title="البحث">
+                        <span class="search-icon">🔍</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Search Bar -->
+        <div id="search-container" class="search-container hidden">
+            <div class="search-wrapper">
+                <input type="text" id="search-input" class="search-input" placeholder="ابحث في الأدوات...">
+                <button id="search-close" class="search-close">✕</button>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-container">
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">الكل</button>
+                <button class="filter-tab" data-filter="recon">Recon</button>
+                <button class="filter-tab" data-filter="exploitation">Exploitation</button>
+                <button class="filter-tab" data-filter="osint">OSINT</button>
+                <button class="filter-tab" data-filter="stealth">Stealth</button>
+                <button class="filter-tab" data-filter="misc">Misc</button>
+            </div>
+        </div>
+
+        <!-- Tools Grid -->
+        <main class="main-grid">
+            <div id="tools-container" class="tools-grid">
+                <!-- Tools will be loaded here dynamically -->
+            </div>
+        </main>
+
+        <!-- View All Tools Button -->
+        <div class="view-all-container">
+            <a href="tools.html" class="view-all-btn">
+                <span>عرض كل الأدوات</span>
+                <span class="arrow">→</span>
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>PIIP Arsenal</h3>
+                    <p>مجموعة من الأدوات المتقدمة للمختبرين الرقميين</p>
+                </div>
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul>
+                        <li><a href="https://github.com/your-repo" target="_blank">GitHub</a></li>
+                        <li><a href="privacy.html">سياسة الاستخدام</a></li>
+                        <li><a href="contact.html">اتصل بنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>الحالة</h4>
+                    <div class="status-indicator">
+                        <span class="status-dot online"></span>
+                        <span>متصل</span>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 PIIP Arsenal. جميع الحقوق محفوظة.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/tools-data.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 

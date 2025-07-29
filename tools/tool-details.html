@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل الأداة - PIIP Arsenal</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+    <!-- Terminal Loader -->
+    <div id="terminal-loader" class="terminal-loader">
+        <div class="terminal-content">
+            <div class="terminal-line">
+                <span class="terminal-prompt">$</span>
+                <span class="terminal-command">loading_tool_details.sh</span>
+            </div>
+            <div class="terminal-line">
+                <span class="terminal-output">جاري تحميل تفاصيل الأداة...</span>
+            </div>
+            <div class="terminal-line">
+                <span class="terminal-output">تم العثور على البيانات ✓</span>
+            </div>
+            <div class="terminal-line">
+                <span class="terminal-output">جاري عرض التفاصيل...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="main-content" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">👁️‍🗨️</div>
+                    <div class="logo-text">
+                        <h1>PIIP_PRO Arsenal</h1>
+                        <p class="tagline">Silent Tools for Loud Impact</p>
+                    </div>
+                </div>
+                <div class="header-controls">
+                    <button id="theme-toggle" class="theme-toggle" title="تبديل الوضع">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button id="back-btn" class="back-btn" title="العودة">
+                        <span class="back-icon">←</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tool Details Container -->
+        <main class="tool-details-container">
+            <div class="tool-details-content">
+                <!-- Tool Header -->
+                <div class="tool-header">
+                    <div class="tool-icon" id="tool-icon">🔧</div>
+                    <div class="tool-info">
+                        <h1 id="tool-name">اسم الأداة</h1>
+                        <div class="tool-meta">
+                            <span class="tool-category" id="tool-category">الفئة</span>
+                            <span class="tool-version" id="tool-version">الإصدار</span>
+                            <span class="tool-size" id="tool-size">الحجم</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tool Actions -->
+                <div class="tool-actions">
+                    <button class="download-btn primary" id="direct-download">
+                        <span class="download-icon">⬇️</span>
+                        تحميل مباشر
+                    </button>
+                    <button class="download-btn secondary" id="github-download">
+                        <span class="github-icon">📦</span>
+                        تحميل من GitHub
+                    </button>
+                    <button class="github-btn" id="github-link">
+                        <span class="github-icon">🔗</span>
+                        عرض على GitHub
+                    </button>
+                </div>
+
+                <!-- Tool Description -->
+                <div class="tool-description">
+                    <h2>الوصف</h2>
+                    <p id="tool-description">وصف الأداة سيظهر هنا...</p>
+                </div>
+
+                <!-- Tool Specifications -->
+                <div class="tool-specs">
+                    <h2>المواصفات</h2>
+                    <div class="specs-grid">
+                        <div class="spec-item">
+                            <span class="spec-label">نظام التشغيل:</span>
+                            <span class="spec-value" id="tool-os">Windows, Linux</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">الترخيص:</span>
+                            <span class="spec-value" id="tool-license">GPL-2.0</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">آخر تحديث:</span>
+                            <span class="spec-value" id="tool-last-update">2024-01-15</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">عدد التحميلات:</span>
+                            <span class="spec-value" id="tool-downloads">0</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">التقييم:</span>
+                            <span class="spec-value" id="tool-rating">0.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Usage Code -->
+                <div class="usage-section">
+                    <h2>كود الاستخدام</h2>
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span class="code-title">مثال على الاستخدام</span>
+                            <button class="copy-btn" id="copy-code">
+                                <span class="copy-icon">📋</span>
+                                نسخ
+                            </button>
+                        </div>
+                        <pre class="code-block" id="usage-code">
+# مثال على استخدام الأداة
+# سيتم تحديث هذا الكود حسب الأداة المحددة
+git clone https://github.com/example/tool
+cd tool
+./install.sh
+./run.sh</pre>
+                    </div>
+                </div>
+
+                <!-- Screenshots -->
+                <div class="screenshots-section">
+                    <h2>لقطات الشاشة</h2>
+                    <div class="screenshots-grid">
+                        <div class="screenshot-placeholder">
+                            <div class="placeholder-icon">📸</div>
+                            <p>لقطة شاشة 1</p>
+                        </div>
+                        <div class="screenshot-placeholder">
+                            <div class="placeholder-icon">📸</div>
+                            <p>لقطة شاشة 2</p>
+                        </div>
+                        <div class="screenshot-placeholder">
+                            <div class="placeholder-icon">📸</div>
+                            <p>لقطة شاشة 3</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Changelog -->
+                <div class="changelog-section">
+                    <h2>سجل التحديثات</h2>
+                    <div class="changelog">
+                        <div class="changelog-item">
+                            <span class="version-tag">v1.0.0</span>
+                            <span class="date">2024-01-15</span>
+                            <p>الإصدار الأول - إضافة الميزات الأساسية</p>
+                        </div>
+                        <div class="changelog-item">
+                            <span class="version-tag">v0.9.0</span>
+                            <span class="date">2024-01-10</span>
+                            <p>إصلاح الأخطاء وتحسين الأداء</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="https://github.com" target="_blank" class="footer-link">GitHub</a>
+                    <a href="#" class="footer-link">سياسة الخصوصية</a>
+                    <a href="#" class="footer-link">اتصل بنا</a>
+                </div>
+                <div class="footer-text">
+                    <p>&copy; 2024 PIIP Arsenal. جميع الحقوق محفوظة.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Scripts -->
+    <script src="../js/tools-data.js"></script>
+    <script src="../js/tool-details.js"></script>
+</body>
+</html> 

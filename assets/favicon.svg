@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="cyberGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00ffff;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#00ff88;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff0040;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="32" cy="32" r="30" fill="#0a0a0a" stroke="#00ffff" stroke-width="2"/>
+  
+  <!-- Crosshair -->
+  <g filter="url(#glow)">
+    <!-- Vertical Line -->
+    <line x1="32" y1="8" x2="32" y2="20" stroke="url(#cyberGradient)" stroke-width="3" stroke-linecap="round"/>
+    <line x1="32" y1="44" x2="32" y2="56" stroke="url(#cyberGradient)" stroke-width="3" stroke-linecap="round"/>
+    
+    <!-- Horizontal Line -->
+    <line x1="8" y1="32" x2="20" y2="32" stroke="url(#cyberGradient)" stroke-width="3" stroke-linecap="round"/>
+    <line x1="44" y1="32" x2="56" y2="32" stroke="url(#cyberGradient)" stroke-width="3" stroke-linecap="round"/>
+    
+    <!-- Center Dot -->
+    <circle cx="32" cy="32" r="4" fill="url(#cyberGradient)"/>
+  </g>
+  
+  <!-- Outer Ring -->
+  <circle cx="32" cy="32" r="25" fill="none" stroke="#00ffff" stroke-width="1" opacity="0.5"/>
+  
+  <!-- Scanning Lines -->
+  <g opacity="0.7">
+    <circle cx="32" cy="32" r="18" fill="none" stroke="#00ff88" stroke-width="1" stroke-dasharray="4,4">
+      <animateTransform attributeName="transform" type="rotate" values="0 32 32;360 32 32" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="32" cy="32" r="12" fill="none" stroke="#ff0040" stroke-width="1" stroke-dasharray="2,2">
+      <animateTransform attributeName="transform" type="rotate" values="360 32 32;0 32 32" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- PIIP Text -->
+  <text x="32" y="62" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#00ffff" font-weight="bold">PIIP</text>
+</svg> 
