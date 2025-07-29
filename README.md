@@ -51,15 +51,23 @@ wep_beta_V.1.0/
 1. **تحميل المشروع**:
    ```bash
    git clone https://github.com/your-repo/piip-arsenal.git
+   ```
+   ```bash
    cd piip-arsenal
    ```
 
 2. **فتح الموقع**:
    - افتح ملف `index.html` في المتصفح
+   ```bash
+   https://mr-piip-pro.github.io/wep_beta_V.1.0/index.html
+   ```
    - أو استخدم خادم محلي:
    ```bash
    python -m http.server 8000
-   # ثم افتح http://localhost:8000
+   ```
+   # ثم افتح 
+   ```bash
+   http://localhost:8000
    ```
 
 ## 🎯 فئات الأدوات
