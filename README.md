@@ -57,11 +57,11 @@ wep_beta_V.1.0/
    ```
 
 2. **فتح الموقع**:
-   - افتح ملف `index.html` في المتصفح
+   # افتح ملف `index.html` في المتصفح
    ```bash
    https://mr-piip-pro.github.io/wep_beta_V.1.0/index.html
    ```
-   - أو استخدم خادم محلي:
+   # أو استخدم خادم محلي:
    ```bash
    python -m http.server 8000
    ```
