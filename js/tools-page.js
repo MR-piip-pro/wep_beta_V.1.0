@@ -1,6 +1,8 @@
 // PIIP Arsenal - Tools Page JavaScript
 class ToolsPage {
     constructor() {
+        this.currentPage = 1;
+        this.itemsPerPage = 12;
         this.currentFilter = 'all';
         this.searchQuery = '';
         this.filteredTools = [...toolsData];
@@ -10,7 +12,7 @@ class ToolsPage {
     init() {
         this.setupEventListeners();
         this.loadTools();
-        this.updateToolsCount();
+        this.setupInfiniteScroll();
         this.loadSavedTheme();
     }
 
@@ -20,6 +22,7 @@ class ToolsPage {
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
                 this.searchQuery = e.target.value.toLowerCase();
+                this.currentPage = 1;
                 this.filterTools();
             });
         }
@@ -28,15 +31,22 @@ class ToolsPage {
         const filterTabs = document.querySelectorAll('.filter-tab');
         filterTabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
-                // Remove active class from all tabs
                 filterTabs.forEach(t => t.classList.remove('active'));
-                // Add active class to clicked tab
                 e.target.classList.add('active');
                 
                 this.currentFilter = e.target.dataset.filter;
+                this.currentPage = 1;
                 this.filterTools();
             });
         });
+
+        // Sort functionality
+        const sortSelect = document.getElementById('sort-select');
+        if (sortSelect) {
+            sortSelect.addEventListener('change', (e) => {
+                this.sortTools(e.target.value);
+            });
+        }
 
         // Theme toggle
         const themeToggle = document.getElementById('theme-toggle');
@@ -45,55 +55,127 @@ class ToolsPage {
                 this.toggleTheme();
             });
         }
+    }
 
-        // Tool card clicks
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('.tool-card')) {
-                const toolId = e.target.closest('.tool-card').dataset.toolId;
-                this.openToolDetails(toolId);
-            }
-        });
+    setupInfiniteScroll() {
+        const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    this.loadMoreTools();
+                }
+            });
+        }, options);
+
+        // Observe the loading indicator
+        const loadingIndicator = document.querySelector('.loading-indicator');
+        if (loadingIndicator) {
+            observer.observe(loadingIndicator);
+        }
     }
 
     loadTools() {
-        const container = document.getElementById('tools-container');
-        if (!container) return;
-
-        this.renderTools(this.filteredTools);
+        this.filterTools();
     }
 
-    renderTools(tools) {
+    filterTools() {
+        let filtered = toolsData;
+
+        // Apply category filter
+        if (this.currentFilter !== 'all') {
+            filtered = filtered.filter(tool => tool.category === this.currentFilter);
+        }
+
+        // Apply search filter
+        if (this.searchQuery) {
+            filtered = filtered.filter(tool => 
+                tool.name.toLowerCase().includes(this.searchQuery) ||
+                tool.description.toLowerCase().includes(this.searchQuery) ||
+                tool.category.toLowerCase().includes(this.searchQuery)
+            );
+        }
+
+        this.filteredTools = filtered;
+        this.renderTools();
+    }
+
+    sortTools(sortBy) {
+        switch (sortBy) {
+            case 'name':
+                this.filteredTools.sort((a, b) => a.name.localeCompare(b.name));
+                break;
+            case 'rating':
+                this.filteredTools.sort((a, b) => b.rating - a.rating);
+                break;
+            case 'downloads':
+                this.filteredTools.sort((a, b) => b.downloads - a.downloads);
+                break;
+            case 'date':
+                this.filteredTools.sort((a, b) => new Date(b.lastUpdate) - new Date(a.lastUpdate));
+                break;
+            default:
+                break;
+        }
+        
+        this.currentPage = 1;
+        this.renderTools();
+    }
+
+    renderTools() {
         const container = document.getElementById('tools-container');
         if (!container) return;
 
-        container.innerHTML = '';
+        // Clear container if it's the first page
+        if (this.currentPage === 1) {
+            container.innerHTML = '';
+        }
 
-        if (tools.length === 0) {
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        const toolsToShow = this.filteredTools.slice(startIndex, endIndex);
+
+        if (toolsToShow.length === 0 && this.currentPage === 1) {
             container.innerHTML = `
                 <div class="no-results">
                     <h3>لا توجد نتائج</h3>
                     <p>جرب تغيير البحث أو الفلتر</p>
+                    <button class="clear-filters-btn" onclick="toolsPage.clearFilters()">مسح الفلاتر</button>
                 </div>
             `;
             return;
         }
 
-        tools.forEach(tool => {
+        // Use DocumentFragment for better performance
+        const fragment = document.createDocumentFragment();
+        
+        toolsToShow.forEach(tool => {
             const card = this.createToolCard(tool);
-            container.appendChild(card);
+            fragment.appendChild(card);
         });
 
-        // Add animation to cards
+        container.appendChild(fragment);
+
+        // Show/hide load more button
+        this.updateLoadMoreButton();
+        
+        // Animate new cards
         this.animateCards();
-        this.updateToolsCount(tools.length);
     }
 
     createToolCard(tool) {
         const card = document.createElement('div');
         card.className = 'tool-card';
         card.dataset.toolId = tool.id;
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-label', `فتح تفاصيل ${tool.name}`);
 
-        const osIcons = tool.os.map(os => `<span class="os-icon ${os}"></span>`).join('');
+        const osIcons = tool.os.map(os => `<span class="os-icon ${os}" title="${os}"></span>`).join('');
         
         card.innerHTML = `
             <div class="tool-header">
@@ -102,13 +184,13 @@ class ToolsPage {
                     <span class="tool-category ${tool.category}">${this.getCategoryName(tool.category)}</span>
                 </div>
                 <div class="tool-rating">
-                    <span class="rating-stars">${this.getRatingStars(tool.rating)}</span>
+                    <span class="rating-stars" aria-label="التقييم: ${tool.rating} من 5">${this.getRatingStars(tool.rating)}</span>
                     <span class="rating-number">${tool.rating}</span>
                 </div>
             </div>
             <p class="tool-description">${tool.description}</p>
             <div class="tool-meta">
-                <div class="tool-os">
+                <div class="tool-os" aria-label="أنظمة التشغيل المدعومة: ${tool.os.join(', ')}">
                     ${osIcons}
                 </div>
                 <div class="tool-info">
@@ -117,10 +199,22 @@ class ToolsPage {
                 </div>
             </div>
             <div class="tool-actions">
-                <button class="download-btn">تحميل</button>
-                <button class="details-btn">التفاصيل</button>
+                <button class="download-btn" onclick="event.stopPropagation(); toolsPage.downloadTool('${tool.id}')">
+                    تحميل
+                </button>
+                <button class="details-btn" onclick="event.stopPropagation(); toolsPage.openToolDetails('${tool.id}')">
+                    التفاصيل
+                </button>
             </div>
         `;
+
+        // Add keyboard support
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.openToolDetails(tool.id);
+            }
+        });
 
         return card;
     }
@@ -156,46 +250,65 @@ class ToolsPage {
         return downloads.toString();
     }
 
-    filterTools() {
-        let filtered = toolsData;
-
-        // Apply category filter
-        if (this.currentFilter !== 'all') {
-            filtered = filtered.filter(tool => tool.category === this.currentFilter);
+    loadMoreTools() {
+        if (this.currentPage * this.itemsPerPage < this.filteredTools.length) {
+            this.currentPage++;
+            this.renderTools();
         }
+    }
 
-        // Apply search filter
-        if (this.searchQuery) {
-            filtered = filtered.filter(tool => 
-                tool.name.toLowerCase().includes(this.searchQuery) ||
-                tool.description.toLowerCase().includes(this.searchQuery) ||
-                tool.category.toLowerCase().includes(this.searchQuery)
-            );
+    updateLoadMoreButton() {
+        const loadMoreBtn = document.querySelector('.load-more-btn');
+        if (loadMoreBtn) {
+            const hasMore = this.currentPage * this.itemsPerPage < this.filteredTools.length;
+            loadMoreBtn.style.display = hasMore ? 'block' : 'none';
         }
+    }
 
-        this.filteredTools = filtered;
-        this.renderTools(filtered);
+    clearFilters() {
+        this.currentFilter = 'all';
+        this.searchQuery = '';
+        this.currentPage = 1;
+        
+        // Reset UI
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.querySelector('[data-filter="all"]').classList.add('active');
+        
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.value = '';
+        }
+        
+        this.filterTools();
+    }
+
+    downloadTool(toolId) {
+        const tool = toolsData.find(t => t.id === toolId);
+        if (tool && tool.githubUrl) {
+            window.open(tool.githubUrl, '_blank');
+            this.showNotification(`جاري فتح ${tool.name}`, 'success');
+        } else {
+            this.showNotification('رابط التحميل غير متاح', 'error');
+        }
     }
 
     openToolDetails(toolId) {
-        // Navigate to tool details page
-        window.location.href = `tools/tool-details.html?id=${toolId}`;
+        window.location.href = `tool-details.html?id=${toolId}`;
     }
 
     toggleTheme() {
         const body = document.body;
         const themeIcon = document.querySelector('.theme-icon');
         
-        // Toggle theme
         if (body.classList.contains('light-theme')) {
-            // Switch to dark theme
             body.classList.remove('light-theme');
             body.classList.add('dark-theme');
             if (themeIcon) themeIcon.textContent = '🌙';
             localStorage.setItem('piiptools_theme', 'dark');
             this.showNotification('تم التبديل إلى الوضع الداكن', 'success');
         } else {
-            // Switch to light theme
             body.classList.remove('dark-theme');
             body.classList.add('light-theme');
             if (themeIcon) themeIcon.textContent = '☀️';
@@ -204,7 +317,6 @@ class ToolsPage {
         }
     }
 
-    // Load saved theme
     loadSavedTheme() {
         const savedTheme = localStorage.getItem('piiptools_theme');
         const body = document.body;
@@ -221,7 +333,9 @@ class ToolsPage {
 
     animateCards() {
         const cards = document.querySelectorAll('.tool-card');
-        cards.forEach((card, index) => {
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        
+        cards.slice(startIndex).forEach((card, index) => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(20px)';
             
@@ -229,22 +343,18 @@ class ToolsPage {
                 card.style.transition = 'all 0.5s ease';
                 card.style.opacity = '1';
                 card.style.transform = 'translateY(0)';
-            }, index * 50);
+            }, index * 100);
         });
-    }
-
-    updateToolsCount(count = null) {
-        const countElement = document.getElementById('tools-count');
-        if (countElement) {
-            const displayCount = count !== null ? count : this.filteredTools.length;
-            countElement.textContent = displayCount;
-        }
     }
 
     showNotification(message, type = 'info') {
         const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
+        notification.className = `notification notification-${type}`;
+        
+        notification.innerHTML = `
+            <span>${message}</span>
+            <button class="notification-close" onclick="this.parentElement.remove()">✕</button>
+        `;
         
         document.body.appendChild(notification);
         
@@ -255,15 +365,18 @@ class ToolsPage {
         setTimeout(() => {
             notification.classList.remove('show');
             setTimeout(() => {
-                document.body.removeChild(notification);
+                if (notification.parentElement) {
+                    notification.parentElement.removeChild(notification);
+                }
             }, 300);
         }, 3000);
     }
 }
 
 // Initialize the tools page
+let toolsPage;
 document.addEventListener('DOMContentLoaded', () => {
-    new ToolsPage();
+    toolsPage = new ToolsPage();
 });
 
 // Add additional styles for tools page

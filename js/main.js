@@ -4,6 +4,7 @@ class PIIPArsenal {
         this.currentFilter = 'all';
         this.searchQuery = '';
         this.filteredTools = [...toolsData];
+        this.searchTimeout = null;
         this.init();
     }
 
@@ -12,6 +13,19 @@ class PIIPArsenal {
         this.loadTools();
         this.setupTerminalLoader();
         this.loadSavedTheme();
+        this.setupServiceWorker();
+    }
+
+    setupServiceWorker() {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('SW registered: ', registration);
+                })
+                .catch(registrationError => {
+                    console.log('SW registration failed: ', registrationError);
+                });
+        }
     }
 
     setupTerminalLoader() {
@@ -41,7 +55,7 @@ class PIIPArsenal {
     }
 
     setupEventListeners() {
-        // Search functionality
+        // Search functionality with debouncing
         const searchToggle = document.getElementById('search-toggle');
         const searchContainer = document.getElementById('search-container');
         const searchClose = document.getElementById('search-close');
@@ -64,12 +78,27 @@ class PIIPArsenal {
 
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
-                this.searchQuery = e.target.value.toLowerCase();
-                this.filterTools();
+                // Clear previous timeout
+                if (this.searchTimeout) {
+                    clearTimeout(this.searchTimeout);
+                }
+                
+                // Set new timeout for debouncing
+                this.searchTimeout = setTimeout(() => {
+                    this.searchQuery = e.target.value.toLowerCase();
+                    this.filterTools();
+                }, 300);
+            });
+
+            // Add keyboard shortcuts
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    searchContainer.classList.add('hidden');
+                }
             });
         }
 
-        // Filter tabs
+        // Filter tabs with improved UX
         const filterTabs = document.querySelectorAll('.filter-tab');
         filterTabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
@@ -80,6 +109,11 @@ class PIIPArsenal {
                 
                 this.currentFilter = e.target.dataset.filter;
                 this.filterTools();
+                
+                // Add haptic feedback on mobile
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(50);
+                }
             });
         });
 
@@ -91,11 +125,19 @@ class PIIPArsenal {
             });
         }
 
-        // Tool card clicks
+        // Tool card clicks with improved accessibility
         document.addEventListener('click', (e) => {
             if (e.target.closest('.tool-card')) {
                 const toolId = e.target.closest('.tool-card').dataset.toolId;
                 this.openToolDetails(toolId);
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 't' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                this.toggleTheme();
             }
         });
     }
@@ -118,15 +160,21 @@ class PIIPArsenal {
                 <div class="no-results">
                     <h3>لا توجد نتائج</h3>
                     <p>جرب تغيير البحث أو الفلتر</p>
+                    <button class="clear-filters-btn" onclick="this.clearFilters()">مسح الفلاتر</button>
                 </div>
             `;
             return;
         }
 
+        // Use DocumentFragment for better performance
+        const fragment = document.createDocumentFragment();
+        
         tools.forEach(tool => {
             const card = this.createToolCard(tool);
-            container.appendChild(card);
+            fragment.appendChild(card);
         });
+
+        container.appendChild(fragment);
 
         // Add animation to cards
         this.animateCards();
@@ -136,8 +184,11 @@ class PIIPArsenal {
         const card = document.createElement('div');
         card.className = 'tool-card';
         card.dataset.toolId = tool.id;
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-label', `فتح تفاصيل ${tool.name}`);
 
-        const osIcons = tool.os.map(os => `<span class="os-icon ${os}"></span>`).join('');
+        const osIcons = tool.os.map(os => `<span class="os-icon ${os}" title="${os}"></span>`).join('');
         
         card.innerHTML = `
             <div class="tool-header">
@@ -146,13 +197,13 @@ class PIIPArsenal {
                     <span class="tool-category ${tool.category}">${this.getCategoryName(tool.category)}</span>
                 </div>
                 <div class="tool-rating">
-                    <span class="rating-stars">${this.getRatingStars(tool.rating)}</span>
+                    <span class="rating-stars" aria-label="التقييم: ${tool.rating} من 5">${this.getRatingStars(tool.rating)}</span>
                     <span class="rating-number">${tool.rating}</span>
                 </div>
             </div>
             <p class="tool-description">${tool.description}</p>
             <div class="tool-meta">
-                <div class="tool-os">
+                <div class="tool-os" aria-label="أنظمة التشغيل المدعومة: ${tool.os.join(', ')}">
                     ${osIcons}
                 </div>
                 <div class="tool-info">
@@ -161,6 +212,14 @@ class PIIPArsenal {
                 </div>
             </div>
         `;
+
+        // Add keyboard support
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.openToolDetails(tool.id);
+            }
+        });
 
         return card;
     }
@@ -204,17 +263,53 @@ class PIIPArsenal {
             filtered = filtered.filter(tool => tool.category === this.currentFilter);
         }
 
-        // Apply search filter
+        // Apply search filter with improved matching
         if (this.searchQuery) {
+            const query = this.searchQuery.toLowerCase();
             filtered = filtered.filter(tool => 
-                tool.name.toLowerCase().includes(this.searchQuery) ||
-                tool.description.toLowerCase().includes(this.searchQuery) ||
-                tool.category.toLowerCase().includes(this.searchQuery)
+                tool.name.toLowerCase().includes(query) ||
+                tool.description.toLowerCase().includes(query) ||
+                tool.category.toLowerCase().includes(query) ||
+                tool.os.some(os => os.toLowerCase().includes(query))
             );
         }
 
         this.filteredTools = filtered;
         this.renderTools(filtered);
+        
+        // Update URL for sharing
+        this.updateURL();
+    }
+
+    updateURL() {
+        const params = new URLSearchParams();
+        if (this.currentFilter !== 'all') {
+            params.set('filter', this.currentFilter);
+        }
+        if (this.searchQuery) {
+            params.set('search', this.searchQuery);
+        }
+        
+        const newURL = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+        window.history.replaceState({}, '', newURL);
+    }
+
+    clearFilters() {
+        this.currentFilter = 'all';
+        this.searchQuery = '';
+        
+        // Reset UI
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.querySelector('[data-filter="all"]').classList.add('active');
+        
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.value = '';
+        }
+        
+        this.filterTools();
     }
 
     openToolDetails(toolId) {
@@ -275,9 +370,19 @@ class PIIPArsenal {
 
     // Utility methods
     showNotification(message, type = 'info') {
+        // Remove existing notifications
+        const existingNotifications = document.querySelectorAll('.notification');
+        existingNotifications.forEach(notification => {
+            notification.remove();
+        });
+
         const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
+        notification.className = `notification notification-${type}`;
+        
+        notification.innerHTML = `
+            <span>${message}</span>
+            <button class="notification-close" onclick="this.parentElement.remove()">✕</button>
+        `;
         
         document.body.appendChild(notification);
         
@@ -288,7 +393,9 @@ class PIIPArsenal {
         setTimeout(() => {
             notification.classList.remove('show');
             setTimeout(() => {
-                document.body.removeChild(notification);
+                if (notification.parentElement) {
+                    notification.parentElement.removeChild(notification);
+                }
             }, 300);
         }, 3000);
     }

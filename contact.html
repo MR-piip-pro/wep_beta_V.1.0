@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اتصل بنا - PIIP Arsenal</title>
+    <meta name="description" content="اتصل بفريق PIIP Arsenal للاستفسارات والتعاون">
+    <meta name="keywords" content="اتصل بنا, PIIP Arsenal, cybersecurity, collaboration">
+    <meta name="author" content="PIIP_PRO">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap" as="style">
+    <link rel="preload" href="css/style.css" as="style">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="apple-touch-icon" href="assets/favicon.svg">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Service Worker -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0a0a0a">
+</head>
+<body class="dark-theme">
+    <!-- Terminal Loading Effect -->
+    <div id="terminal-loader" class="terminal-loader">
+        <div class="terminal-content">
+            <div class="terminal-line">Establishing secure connection...</div>
+            <div class="terminal-line">Loading contact form...</div>
+            <div class="terminal-line">Connection established.</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="main-content hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">👁️‍🗨️</div>
+                    <div class="logo-text">
+                        <h1>اتصل بنا</h1>
+                        <p class="tagline">Contact & Collaboration</p>
+                    </div>
+                </div>
+                <div class="header-controls">
+                    <button id="theme-toggle" class="theme-toggle" title="تبديل الوضع">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <a href="index.html" class="back-btn" title="العودة للصفحة الرئيسية">
+                        <span class="back-icon">←</span>
+                        <span>الرئيسية</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Contact Content -->
+        <main class="contact-container">
+            <div class="contact-content">
+                <!-- Contact Header -->
+                <section class="contact-header">
+                    <h2>🤝 دعنا نتواصل</h2>
+                    <p>نحن متاحون للتعاون والمشاريع المشتركة. لا تتردد في التواصل معنا لأي استفسار أو اقتراح.</p>
+                </section>
+
+                <!-- Contact Form -->
+                <section class="contact-form-section">
+                    <h3>📝 نموذج الاتصال</h3>
+                    <form id="contact-form" class="contact-form">
+                        <div class="form-group">
+                            <label for="name">الاسم *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">البريد الإلكتروني *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">الموضوع *</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">اختر الموضوع</option>
+                                <option value="collaboration">تعاون مشروع</option>
+                                <option value="consultation">استشارة تقنية</option>
+                                <option value="bug-report">تقرير خطأ</option>
+                                <option value="feature-request">طلب ميزة جديدة</option>
+                                <option value="security">مشكلة أمنية</option>
+                                <option value="other">أخرى</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">الرسالة *</label>
+                            <textarea id="message" name="message" rows="6" required placeholder="اكتب رسالتك هنا..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="privacy" name="privacy" required>
+                                <span class="checkmark"></span>
+                                أوافق على <a href="privacy.html" target="_blank">سياسة الخصوصية</a>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <span>إرسال الرسالة</span>
+                            <span class="icon">📤</span>
+                        </button>
+                    </form>
+                </section>
+
+                <!-- Contact Methods -->
+                <section class="contact-methods-section">
+                    <h3>📞 طرق التواصل</h3>
+                    <div class="contact-methods-grid">
+                        <div class="contact-method-card">
+                            <div class="method-icon">🔗</div>
+                            <h4>GitHub</h4>
+                            <p>تابع مشاريعي وأحدث التطويرات</p>
+                            <a href="https://github.com/MR-piip-pro" target="_blank" class="method-link">
+                                @MR-piip-pro
+                            </a>
+                        </div>
+                        
+                        <div class="contact-method-card">
+                            <div class="method-icon">📧</div>
+                            <h4>البريد الإلكتروني</h4>
+                            <p>للرسائل الرسمية والاستفسارات</p>
+                            <a href="mailto:contact@piip-arsenal.com" class="method-link">
+                                contact@piip-arsenal.com
+                            </a>
+                        </div>
+                        
+                        <div class="contact-method-card">
+                            <div class="method-icon">🔐</div>
+                            <h4>PGP Key</h4>
+                            <p>للرسائل المشفرة والحساسة</p>
+                            <button class="pgp-btn" onclick="showPGPKey()">
+                                عرض المفتاح العام
+                            </button>
+                        </div>
+                        
+                        <div class="contact-method-card">
+                            <div class="method-icon">💬</div>
+                            <h4>Discord</h4>
+                            <p>للمحادثات السريعة والمجتمع</p>
+                            <span class="method-link">PIIP_PRO#0000</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Collaboration Areas -->
+                <section class="collaboration-section">
+                    <h3>🚀 مجالات التعاون</h3>
+                    <div class="collaboration-grid">
+                        <div class="collaboration-area">
+                            <div class="area-icon">🛡️</div>
+                            <h4>اختبار الاختراق</h4>
+                            <p>تطوير أدوات وطرق اختبار الاختراق المتقدمة</p>
+                        </div>
+                        
+                        <div class="collaboration-area">
+                            <div class="area-icon">🔍</div>
+                            <h4>OSINT Automation</h4>
+                            <p>أتمتة جمع المعلومات الاستخباراتية</p>
+                        </div>
+                        
+                        <div class="collaboration-area">
+                            <div class="area-icon">🤖</div>
+                            <h4>AI Security</h4>
+                            <p>تطبيق الذكاء الاصطناعي في الأمن السيبراني</p>
+                        </div>
+                        
+                        <div class="collaboration-area">
+                            <div class="area-icon">🌐</div>
+                            <h4>Web Development</h4>
+                            <p>تطوير تطبيقات ويب آمنة ومتقدمة</p>
+                        </div>
+                        
+                        <div class="collaboration-area">
+                            <div class="area-icon">📱</div>
+                            <h4>Mobile Security</h4>
+                            <p>أمن تطبيقات الموبايل والتحليل</p>
+                        </div>
+                        
+                        <div class="collaboration-area">
+                            <div class="area-icon">🔬</div>
+                            <h4>Research</h4>
+                            <p>البحث في مجالات الأمن السيبراني الجديدة</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Response Time -->
+                <section class="response-section">
+                    <h3>⏱️ وقت الاستجابة</h3>
+                    <div class="response-grid">
+                        <div class="response-item">
+                            <div class="response-icon">⚡</div>
+                            <h4>الاستفسارات العاجلة</h4>
+                            <p>24 ساعة</p>
+                        </div>
+                        
+                        <div class="response-item">
+                            <div class="response-icon">📧</div>
+                            <h4>البريد الإلكتروني</h4>
+                            <p>48 ساعة</p>
+                        </div>
+                        
+                        <div class="response-item">
+                            <div class="response-icon">🔐</div>
+                            <h4>PGP المشفر</h4>
+                            <p>72 ساعة</p>
+                        </div>
+                        
+                        <div class="response-item">
+                            <div class="response-icon">💼</div>
+                            <h4>عروض العمل</h4>
+                            <p>أسبوع واحد</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FAQ Section -->
+                <section class="faq-section">
+                    <h3>❓ الأسئلة الشائعة</h3>
+                    <div class="faq-grid">
+                        <div class="faq-item">
+                            <h4>هل تقدم خدمات استشارية؟</h4>
+                            <p>نعم، أقدم استشارات في مجال الأمن السيبراني واختبار الاختراق. يرجى التواصل عبر البريد الإلكتروني للتفاصيل.</p>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <h4>هل يمكنني المساهمة في المشاريع؟</h4>
+                            <p>نعم، أرحب بالمساهمات! يمكنك فورك المشاريع وإرسال Pull Requests عبر GitHub.</p>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <h4>هل تتعاون مع الشركات؟</h4>
+                            <p>نعم، أتعاون مع الشركات في مشاريع الأمن السيبراني. يرجى التواصل للتفاصيل.</p>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <h4>كيف يمكنني الحصول على التدريب؟</h4>
+                            <p>أقدم جلسات تدريبية مخصصة. يرجى التواصل لتحديد المتطلبات والتفاصيل.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>PIIP Arsenal</h3>
+                    <p>مجموعة من الأدوات المتقدمة للمختبرين الرقميين</p>
+                </div>
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul>
+                        <li><a href="https://github.com/MR-piip-pro" target="_blank">GitHub</a></li>
+                        <li><a href="privacy.html">سياسة الاستخدام</a></li>
+                        <li><a href="contact.html">اتصل بنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>الحالة</h4>
+                    <div class="status-indicator">
+                        <span class="status-dot online"></span>
+                        <span>متصل</span>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 PIIP Arsenal. جميع الحقوق محفوظة.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- PGP Key Modal -->
+    <div id="pgp-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🔐 PGP Public Key</h3>
+                <button class="modal-close" onclick="closePGPModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <p>استخدم هذا المفتاح العام لتشفير رسائلك:</p>
+                <div class="pgp-key-container">
+                    <pre class="pgp-key">
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQENBF4QqXYBCADQ...
+[Your PGP Public Key Here]
+-----END PGP PUBLIC KEY BLOCK-----
+                    </pre>
+                </div>
+                <button class="copy-btn" onclick="copyPGPKey()">
+                    نسخ المفتاح
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/contact-page.js"></script>
+</body>
+</html> 
