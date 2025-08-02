@@ -501,7 +501,7 @@ body {
 
 .tools-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--spacing-lg);
     margin-top: var(--spacing-xl);
 }
@@ -772,7 +772,7 @@ body {
     }
     
     .tools-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(1, 1fr);
         gap: var(--spacing-md);
     }
     
@@ -788,13 +788,19 @@ body {
 
 @media (max-width: 1200px) and (min-width: 769px) {
     .tools-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+    .tools-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (min-width: 1400px) {
     .tools-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
