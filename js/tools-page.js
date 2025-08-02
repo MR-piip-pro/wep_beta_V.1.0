@@ -137,7 +137,7 @@ class ToolsPage {
     updateToolsCount() {
         const toolsCountElement = document.getElementById('tools-count');
         if (toolsCountElement) {
-            toolsCountElement.textContent = this.filteredTools.length;
+            toolsCountElement.textContent = toolsData.length;
         }
     }
 
