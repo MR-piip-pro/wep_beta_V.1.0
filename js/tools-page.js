@@ -2,7 +2,7 @@
 class ToolsPage {
     constructor() {
         this.currentPage = 1;
-        this.itemsPerPage = 12;
+        this.itemsPerPage = 24; // زيادة عدد الأدوات المعروضة
         this.currentFilter = 'all';
         this.searchQuery = '';
         this.filteredTools = [...toolsData];
@@ -11,9 +11,33 @@ class ToolsPage {
 
     init() {
         this.setupEventListeners();
+        this.validateToolsData();
         this.loadTools();
         this.setupInfiniteScroll();
         this.loadSavedTheme();
+        this.updateToolsCount();
+    }
+
+    validateToolsData() {
+        if (!toolsData || !Array.isArray(toolsData)) {
+            console.error('خطأ: بيانات الأدوات غير صحيحة في صفحة الأدوات');
+            return;
+        }
+
+        console.log(`تم تحميل ${toolsData.length} أداة في صفحة الأدوات`);
+        
+        // التحقق من صحة البيانات
+        const validTools = toolsData.filter(tool => 
+            tool.id && 
+            tool.name && 
+            tool.category && 
+            tool.description &&
+            tool.githubUrl
+        );
+
+        if (validTools.length !== toolsData.length) {
+            console.warn(`تحذير: ${toolsData.length - validTools.length} أداة تحتوي على بيانات غير مكتملة في صفحة الأدوات`);
+        }
     }
 
     setupEventListeners() {
@@ -91,17 +115,30 @@ class ToolsPage {
             filtered = filtered.filter(tool => tool.category === this.currentFilter);
         }
 
-        // Apply search filter
+        // Apply search filter with improved matching
         if (this.searchQuery) {
             filtered = filtered.filter(tool => 
                 tool.name.toLowerCase().includes(this.searchQuery) ||
                 tool.description.toLowerCase().includes(this.searchQuery) ||
-                tool.category.toLowerCase().includes(this.searchQuery)
+                tool.category.toLowerCase().includes(this.searchQuery) ||
+                tool.os.some(os => os.toLowerCase().includes(this.searchQuery)) ||
+                (tool.extendedDescription && tool.extendedDescription.toLowerCase().includes(this.searchQuery))
             );
         }
 
         this.filteredTools = filtered;
         this.renderTools();
+        this.updateToolsCount();
+        
+        // Log results for debugging
+        console.log(`عرض ${this.filteredTools.length} من ${toolsData.length} أداة في صفحة الأدوات`);
+    }
+
+    updateToolsCount() {
+        const toolsCountElement = document.getElementById('tools-count');
+        if (toolsCountElement) {
+            toolsCountElement.textContent = this.filteredTools.length;
+        }
     }
 
     sortTools(sortBy) {

@@ -7,9 +7,32 @@ class ToolDetailsManager {
 
     init() {
         this.setupEventListeners();
+        this.validateToolsData();
         this.loadToolData();
         this.setupTerminalLoader();
         this.loadSavedTheme();
+    }
+
+    validateToolsData() {
+        if (!toolsData || !Array.isArray(toolsData)) {
+            console.error('خطأ: بيانات الأدوات غير صحيحة في صفحة التفاصيل');
+            return;
+        }
+
+        console.log(`تم تحميل ${toolsData.length} أداة في صفحة التفاصيل`);
+        
+        // التحقق من صحة البيانات
+        const validTools = toolsData.filter(tool => 
+            tool.id && 
+            tool.name && 
+            tool.category && 
+            tool.description &&
+            tool.githubUrl
+        );
+
+        if (validTools.length !== toolsData.length) {
+            console.warn(`تحذير: ${toolsData.length - validTools.length} أداة تحتوي على بيانات غير مكتملة في صفحة التفاصيل`);
+        }
     }
 
     setupEventListeners() {
@@ -82,6 +105,7 @@ class ToolDetailsManager {
             return;
         }
 
+        console.log(`تم تحميل تفاصيل الأداة: ${this.currentTool.name}`);
         this.populateToolData();
     }
 
@@ -130,6 +154,43 @@ class ToolDetailsManager {
         const usageCode = document.getElementById('usage-code');
         if (usageCode) {
             usageCode.textContent = this.generateUsageCode();
+        }
+
+        // Update download buttons
+        this.updateDownloadButtons();
+    }
+
+    updateDownloadButtons() {
+        const directDownload = document.getElementById('direct-download');
+        const githubDownload = document.getElementById('github-download');
+        const githubLink = document.getElementById('github-link');
+
+        if (this.currentTool && this.currentTool.githubUrl) {
+            if (directDownload) {
+                directDownload.disabled = false;
+                directDownload.style.opacity = '1';
+            }
+            if (githubDownload) {
+                githubDownload.disabled = false;
+                githubDownload.style.opacity = '1';
+            }
+            if (githubLink) {
+                githubLink.disabled = false;
+                githubLink.style.opacity = '1';
+            }
+        } else {
+            if (directDownload) {
+                directDownload.disabled = true;
+                directDownload.style.opacity = '0.5';
+            }
+            if (githubDownload) {
+                githubDownload.disabled = true;
+                githubDownload.style.opacity = '0.5';
+            }
+            if (githubLink) {
+                githubLink.disabled = true;
+                githubLink.style.opacity = '0.5';
+            }
         }
     }
 
@@ -200,15 +261,17 @@ npm start
             return;
         }
 
+        if (!this.currentTool.githubUrl) {
+            this.showNotification('رابط التحميل غير متاح', 'error');
+            return;
+        }
+
         this.showNotification('جاري التحميل...', 'info');
         
-        // Simulate download process
-        setTimeout(() => {
-            // Try to open the GitHub releases page for direct download
-            const releasesUrl = this.currentTool.githubUrl.replace('/github.com/', '/github.com/') + '/releases';
-            window.open(releasesUrl, '_blank');
-            this.showNotification('تم فتح صفحة التحميل!', 'success');
-        }, 1000);
+        // Try to open the GitHub releases page for direct download
+        const releasesUrl = this.currentTool.githubUrl.replace('/github.com/', '/github.com/') + '/releases';
+        window.open(releasesUrl, '_blank');
+        this.showNotification('تم فتح صفحة التحميل!', 'success');
     }
 
     handleGitHubDownload(e) {
@@ -216,6 +279,11 @@ npm start
         
         if (!this.currentTool) {
             this.showNotification('خطأ في تحميل الأداة', 'error');
+            return;
+        }
+
+        if (!this.currentTool.githubUrl) {
+            this.showNotification('رابط GitHub غير متاح', 'error');
             return;
         }
 
@@ -232,6 +300,11 @@ npm start
         
         if (!this.currentTool) {
             this.showNotification('خطأ في فتح الرابط', 'error');
+            return;
+        }
+
+        if (!this.currentTool.githubUrl) {
+            this.showNotification('رابط GitHub غير متاح', 'error');
             return;
         }
 
@@ -330,37 +403,34 @@ npm start
     }
 
     showNotification(message, type = 'info') {
-        const container = document.getElementById('notification-container');
-        if (!container) return;
+        // Remove existing notifications
+        const existingNotifications = document.querySelectorAll('.notification');
+        existingNotifications.forEach(notification => {
+            notification.remove();
+        });
 
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
+        
         notification.innerHTML = `
-            <span class="notification-message">${message}</span>
-            <button class="notification-close">×</button>
+            <span>${message}</span>
+            <button class="notification-close" onclick="this.parentElement.remove()">✕</button>
         `;
-
-        container.appendChild(notification);
-
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.remove();
-            }
-        }, 5000);
-
-        // Close button
-        const closeBtn = notification.querySelector('.notification-close');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                notification.remove();
-            });
-        }
-
-        // Animate in
+        
+        document.body.appendChild(notification);
+        
         setTimeout(() => {
             notification.classList.add('show');
         }, 100);
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.parentElement.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
     }
 }
 
@@ -413,6 +483,11 @@ const toolDetailsStyles = `
     }
     
     .tool-category.recon { background: var(--accent-green); color: var(--bg-primary); }
+    .tool-category.exploitation { background: var(--accent-red); color: white; }
+    .tool-category.osint { background: var(--accent-neon); color: var(--bg-primary); }
+    .tool-category.stealth { background: var(--accent-purple); color: white; }
+    .tool-category.reverse { background: var(--accent-orange); color: var(--bg-primary); }
+    .tool-category.misc { background: var(--accent-blue); color: white; }
     
     .tool-rating {
         display: flex;
@@ -454,12 +529,17 @@ const toolDetailsStyles = `
         text-align: center;
     }
     
+    .download-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
     .download-btn.primary {
         background: linear-gradient(45deg, var(--accent-neon), var(--accent-green));
         color: var(--bg-primary);
     }
     
-    .download-btn.primary:hover {
+    .download-btn.primary:hover:not(:disabled) {
         transform: translateY(-2px);
         box-shadow: var(--shadow-glow);
     }
@@ -470,7 +550,7 @@ const toolDetailsStyles = `
         color: var(--text-primary);
     }
     
-    .download-btn.secondary:hover {
+    .download-btn.secondary:hover:not(:disabled) {
         background: var(--accent-neon);
         color: var(--bg-primary);
     }

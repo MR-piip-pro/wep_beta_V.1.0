@@ -10,10 +10,33 @@ class PIIPArsenal {
 
     init() {
         this.setupEventListeners();
+        this.validateToolsData();
         this.loadTools();
         this.setupTerminalLoader();
         this.loadSavedTheme();
         this.setupServiceWorker();
+    }
+
+    validateToolsData() {
+        if (!toolsData || !Array.isArray(toolsData)) {
+            console.error('خطأ: بيانات الأدوات غير صحيحة');
+            return;
+        }
+
+        console.log(`تم تحميل ${toolsData.length} أداة بنجاح`);
+        
+        // التحقق من صحة البيانات
+        const validTools = toolsData.filter(tool => 
+            tool.id && 
+            tool.name && 
+            tool.category && 
+            tool.description &&
+            tool.githubUrl
+        );
+
+        if (validTools.length !== toolsData.length) {
+            console.warn(`تحذير: ${toolsData.length - validTools.length} أداة تحتوي على بيانات غير مكتملة`);
+        }
     }
 
     setupServiceWorker() {
@@ -270,7 +293,8 @@ class PIIPArsenal {
                 tool.name.toLowerCase().includes(query) ||
                 tool.description.toLowerCase().includes(query) ||
                 tool.category.toLowerCase().includes(query) ||
-                tool.os.some(os => os.toLowerCase().includes(query))
+                tool.os.some(os => os.toLowerCase().includes(query)) ||
+                (tool.extendedDescription && tool.extendedDescription.toLowerCase().includes(query))
             );
         }
 
@@ -279,6 +303,17 @@ class PIIPArsenal {
         
         // Update URL for sharing
         this.updateURL();
+        
+        // Show results count
+        this.updateResultsCount();
+    }
+
+    updateResultsCount() {
+        const resultsCount = this.filteredTools.length;
+        const totalCount = toolsData.length;
+        
+        // You can add a results counter here if needed
+        console.log(`عرض ${resultsCount} من ${totalCount} أداة`);
     }
 
     updateURL() {
