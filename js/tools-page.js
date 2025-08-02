@@ -15,12 +15,23 @@ class ToolsPage {
         this.loadTools();
         this.setupInfiniteScroll();
         this.loadSavedTheme();
-        this.updateToolsCount();
+        
+        // تأخير قليل للتأكد من تحميل البيانات
+        setTimeout(() => {
+            this.updateToolsCount();
+        }, 100);
+        
+        // تحديث إضافي بعد فترة أطول للتأكد
+        setTimeout(() => {
+            this.updateToolsCount();
+        }, 1000);
     }
 
     validateToolsData() {
         if (!toolsData || !Array.isArray(toolsData)) {
             console.error('خطأ: بيانات الأدوات غير صحيحة في صفحة الأدوات');
+            // تحديث العدد حتى لو كانت البيانات غير صحيحة
+            this.updateToolsCount();
             return;
         }
 
@@ -38,6 +49,9 @@ class ToolsPage {
         if (validTools.length !== toolsData.length) {
             console.warn(`تحذير: ${toolsData.length - validTools.length} أداة تحتوي على بيانات غير مكتملة في صفحة الأدوات`);
         }
+        
+        // تحديث العدد بعد التحقق من البيانات
+        this.updateToolsCount();
     }
 
     setupEventListeners() {
@@ -128,6 +142,8 @@ class ToolsPage {
 
         this.filteredTools = filtered;
         this.renderTools();
+        
+        // تحديث العدد الإجمالي (ليس المفلتر)
         this.updateToolsCount();
         
         // Log results for debugging
@@ -137,7 +153,16 @@ class ToolsPage {
     updateToolsCount() {
         const toolsCountElement = document.getElementById('tools-count');
         if (toolsCountElement) {
-            toolsCountElement.textContent = toolsData.length;
+            // التأكد من أن toolsData متاح
+            if (typeof toolsData !== 'undefined' && Array.isArray(toolsData)) {
+                toolsCountElement.textContent = toolsData.length;
+                console.log(`تم تحديث عدد الأدوات: ${toolsData.length}`);
+            } else {
+                toolsCountElement.textContent = '0';
+                console.error('toolsData غير متاح أو غير صحيح');
+            }
+        } else {
+            console.error('لم يتم العثور على عنصر tools-count');
         }
     }
 
