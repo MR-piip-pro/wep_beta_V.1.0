@@ -2594,6 +2594,51 @@ const toolsData = [
         rating: 4.8,
         license: "MIT",
         extendedDescription: "AutoGPT Pentest هي أداة Pentesting تعمل بـ GPT لتوليد سيناريوهات وهجمات ذكية. تقنية ذكية اصطناعية."
+    },
+    {
+        id: "onefuzz",
+        name: "OneFuzz",
+        category: "misc",
+        description: "منصة fuzzing أوتوماتيكية من مايكروسوفت",
+        githubUrl: "https://github.com/microsoft/onefuzz",
+        os: ["windows", "linux", "macos"],
+        size: "25.8 MB",
+        version: "2.0.0",
+        lastUpdate: "2024-01-27",
+        downloads: 35000,
+        rating: 4.7,
+        license: "MIT",
+        extendedDescription: "OneFuzz هي منصة fuzzing أوتوماتيكية من مايكروسوفت. أداة متقدمة لاختبار الأمان والثغرات."
+    },
+    {
+        id: "intrigue-core",
+        name: "Intrigue Core",
+        category: "misc",
+        description: "إطار كشف البنية الرقمية المكشوفة (Attack Surface)",
+        githubUrl: "https://github.com/intrigueio/intrigue-core",
+        os: ["linux", "macos"],
+        size: "15.2 MB",
+        version: "1.0.0",
+        lastUpdate: "2024-01-27",
+        downloads: 22000,
+        rating: 4.5,
+        license: "Apache-2.0",
+        extendedDescription: "Intrigue Core هو إطار كشف البنية الرقمية المكشوفة (Attack Surface). أداة متخصصة في تحليل نقاط الضعف."
+    },
+    {
+        id: "torghost",
+        name: "TorGhost",
+        category: "stealth",
+        description: "سكربت تدوير عنوان IP عبر TOR تلقائيًا",
+        githubUrl: "https://github.com/D4Vinci/TorGhost",
+        os: ["linux"],
+        size: "2.1 MB",
+        version: "1.0.0",
+        lastUpdate: "2024-01-27",
+        downloads: 28000,
+        rating: 4.6,
+        license: "GPL-3.0",
+        extendedDescription: "TorGhost هو سكربت تدوير عنوان IP عبر TOR تلقائيًا. أداة متقدمة لإخفاء الهوية الرقمية."
     }
 ];
 
